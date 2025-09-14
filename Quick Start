@@ -1,0 +1,69 @@
+1. Install Wazuh Manager
+
+Follow official docs: https://documentation.wazuh.com/
+
+Minimal install (Ubuntu example):
+
+# on manager VM
+curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | sudo apt-key add -
+# add repo (see current docs for release path)
+sudo apt update
+sudo apt install wazuh-manager -y
+
+2. Install Wazuh Agent (endpoints)
+
+See wazuh/agent-setup/ for example scripts. Example Linux agent install:
+sudo bash install-agent-linux.sh 192.168.1.100
+# then on manager register the agent
+/var/ossec/bin/manage_agents
+
+3. Install Shuffle (SOAR)
+
+Quick Docker Compose example (repo contains sample docker-compose.yml for Shuffle):
+git clone https://github.com/frikky/Shuffle.git
+
+Connect Wazuh -> Shuffle
+
+Configure a Wazuh integration that forwards alerts (JSON) to Shuffle webhook. Example Wazuh integrations config snippet:
+
+<integration>
+<name>shuffle</name>
+<hook_url>http://shuffle.local:8080/webhook/wazuh</hook_url>
+<level>7</level>
+</integration>
+
+5. Import Playbooks & Connectors
+
+Import the JSON playbooks in shuffle/playbooks/ into Shuffle.
+
+Add connectors (API keys) for VirusTotal, AbuseIPDB, Slack, Firewall.
+
+Shuffle Playbook: Brute Force Detection (summary)
+
+Trigger: Wazuh alert → Shuffle webhook.
+
+Steps:
+
+Parse alert → extract srcip, agent.name, rule.id.
+
+Enrich IP via virustotal_connector.py (score & tags).
+
+If malicious_score > threshold or failed_login_count > 20:
+
+Create Jira/TheHive ticket.
+
+Block IP via Firewall connector.
+
+Send Slack alert to SOC channel.
+
+Log the run and return status to Wazuh (optional comment).
+
+The full playbook JSON is provided under shuffle/playbooks/brute_force_detection.json.
+
+Detection-to-Response Mapping (examples)
+
+Failed logins (Wazuh Rule 100100) → Enrich IP → Block via firewall if confirmed malicious.
+
+Malicious hash (YARA / Wazuh) → Query VirusTotal → Quarantine host or isolate endpoint and create incident ticket.
+
+Port scan → Blacklist source IP and notify SOC.
