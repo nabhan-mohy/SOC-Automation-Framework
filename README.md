@@ -2,6 +2,8 @@
 A compact, production-ready SOC Automation Framework designed for blue teams and SOC analysts. This repository contains a reference architecture, deployment steps, Wazuh detection rules, Shuffle (SOAR) playbook examples, helper scripts, and documentation so you can reproduce the environment and demonstrate it during interviews or in a portfolio.
 
 **Overview**
+<img width="1246" height="867" alt="ChatGPT Image Dec 29, 2025, 10_52_11 AM" src="https://github.com/user-attachments/assets/7caeb9cb-a3c2-4709-a1ff-966c0b36e416" />
+
 
 Goal: Automate alert triage, enrichment, and response to reduce manual work and improve Mean Time To Respond (MTTR).
 
