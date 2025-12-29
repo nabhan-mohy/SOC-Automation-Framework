@@ -47,7 +47,7 @@ SOC-Automation-Framework/
 ##  Quick Start
 
 ### 1. Wazuh Installation on Kali
-```bash
+
 # Install Wazuh Manager
 "curl -sO https://packages.wazuh.com/4.7/wazuh-install.sh
 sudo bash wazuh-install.sh --wazuh-indexer-node wazuh.indexer"
